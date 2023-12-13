@@ -24,9 +24,12 @@ class Level extends Game {
     // Set the game's camera target to the player
     this.camera.target = player;
 
+    // Create background and add it to the game
+    //this.addGameObject();
+
     // Define the platform's width and the gap between platforms
     const platformWidth = 200;
-    const gap = 100;
+    const gap = 80;
 
     // Create platforms and add them to the game
     const platforms = [

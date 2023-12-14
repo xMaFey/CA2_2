@@ -20,7 +20,7 @@ class Player extends GameObject {
     this.addComponent(new Input()); // Add input for handling user input
     // Initialize all the player specific properties
     this.direction = 1;
-    this.lives = 3;
+    this.lives = 2;
     this.score = 0;
     this.isOnPlatform = false;
     this.isJumping = false;
@@ -167,6 +167,7 @@ class Player extends GameObject {
     if (!this.isInvulnerable) {
       this.lives--;
       this.isInvulnerable = true;
+      this.emitHitParticels();
       // Make player vulnerable again after 2 seconds
       setTimeout(() => {
         this.isInvulnerable = false;
@@ -183,14 +184,19 @@ class Player extends GameObject {
 
   emitCollectParticles() {
     // Create a particle system at the player's position when a collectible is collected
-    const particleSystem = new ParticleSystem(this.x, this.y, 'yellow', 20, 1, 0.5);
+    const particleSystem = new ParticleSystem(this.x, this.y, 'yellow', 30, 1, 0.5);
     this.game.addGameObject(particleSystem);
+  }
+
+  emitHitParticels(){
+        const particleSystem = new ParticleSystem(this.x, this.y, 'red', 40, 1.5, 1);
+        this.game.addGameObject(particleSystem);
   }
 
   resetPlayerState() {
     // Reset the player's state, repositioning it and nullifying movement
-    this.x = this.game.canvas.width / 2;
-    this.y = this.game.canvas.height / 2;
+    this.x = this.game.canvas.width / 2 + 100;
+    this.y = this.game.canvas.height / 2 - 25;
     this.getComponent(Physics).velocity = { x: 0, y: 0 };
     this.getComponent(Physics).acceleration = { x: 0, y: 0 };
     this.direction = 1;
@@ -201,7 +207,7 @@ class Player extends GameObject {
 
   resetGame() {
     // Reset the game state, which includes the player's state
-    this.lives = 3;
+    this.lives = 2;
     this.score = 0;
     this.resetPlayerState();
   }

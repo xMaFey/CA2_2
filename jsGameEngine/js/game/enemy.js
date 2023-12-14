@@ -32,7 +32,7 @@ class Enemy extends GameObject {
     
     // Initialize variables related to enemy's movement
     this.movementDistance = 0;
-    this.movementLimit = 100;
+    this.movementLimit = 70;
     this.movingRight = true;
   }
 

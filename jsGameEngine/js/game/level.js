@@ -5,6 +5,7 @@ import Enemy from './enemy.js';
 import PlayerUI from './playerUI.js';
 import Platform from './platform.js';
 import Collectible from './collectible.js';
+import { Images } from '../engine/resources.js';
 
 // Define a class Level that extends the Game class from the engine
 class Level extends Game {
@@ -15,7 +16,7 @@ class Level extends Game {
     super(canvasId);
     
     // Create a player object and add it to the game
-    const player = new Player(this.canvas.width / 2 - 25, this.canvas.height / 2 - 25);
+    const player = new Player(this.canvas.width / 2 + 100, this.canvas.height / 2 - 25);
     this.addGameObject(player);
     
     // Add the player UI object to the game
@@ -28,30 +29,34 @@ class Level extends Game {
     //this.addGameObject();
 
     // Define the platform's width and the gap between platforms
-    const platformWidth = 200;
-    const gap = 80;
+    const platformWidth = 150;
+    const gap = 120;
 
     // Create platforms and add them to the game
     const platforms = [
-      new Platform(0, this.canvas.height - 20, platformWidth, 20),
-      new Platform(platformWidth + gap, this.canvas.height - 20, platformWidth, 20),
-      new Platform(2 * (platformWidth + gap), this.canvas.height - 20, platformWidth, 20),
-      new Platform(3 * (platformWidth + gap), this.canvas.height - 20, platformWidth, 20),
-      new Platform(4 * (platformWidth + gap), this.canvas.height - 20, platformWidth, 20),
+      new Platform(0, this.canvas.height - 20, platformWidth, 25),
+      new Platform(platformWidth + gap, this.canvas.height - 50, platformWidth, 25),
+      new Platform(2 * (platformWidth + gap), this.canvas.height - 10, platformWidth, 25),
+      new Platform(3 * (platformWidth + gap), this.canvas.height - 80, platformWidth, 25),
+      new Platform(4 * (platformWidth + gap), this.canvas.height - 100, platformWidth, 25),
+      new Platform(0, this.canvas.height - 150, platformWidth, 25),
+      new Platform(2 * (platformWidth + gap + 10), this.canvas.height - 200, platformWidth, 25),
+      new Platform(platformWidth + gap + 10, this.canvas.height - 250, platformWidth, 25),
+      new Platform(platformWidth + gap + 300, this.canvas.height - 390, platformWidth, 25),
     ];
     for (const platform of platforms) {
       this.addGameObject(platform);
     }
 
     // Create enemies and add them to the game
-    this.addGameObject(new Enemy(50, this.canvas.height - 90));
-    this.addGameObject(new Enemy(platformWidth + gap + 50, this.canvas.height - 90));
-    this.addGameObject(new Enemy(2 * (platformWidth + gap) + 50, this.canvas.height - 90));
+    this.addGameObject(new Enemy(30, this.canvas.height - 90));
+    this.addGameObject(new Enemy(platformWidth + gap + 30, this.canvas.height - 90));
+    this.addGameObject(new Enemy(2 * (platformWidth + gap) + 30, this.canvas.height - 90));
 
     // Create collectibles and add them to the game
-    this.addGameObject(new Collectible(250, this.canvas.height - 100, 20, 20));
-    this.addGameObject(new Collectible(450, this.canvas.height - 100, 20, 20));
-    this.addGameObject(new Collectible(650, this.canvas.height - 100, 20, 20));
+    this.addGameObject(new Collectible(60, this.canvas.height - 80, 30, 30));
+    this.addGameObject(new Collectible(630, this.canvas.height - 440, 30, 30));
+    this.addGameObject(new Collectible(610, this.canvas.height - 60, 30, 30));
   }
   
 }

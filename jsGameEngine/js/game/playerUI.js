@@ -1,16 +1,14 @@
 import GameObject from '../engine/gameobject.js';
 import UI from '../engine/ui.js';
 import Player from './player.js';
-import { Images } from '../engine/resources.js';
-import Renderer from '../engine/renderer.js';
 
 // The PlayerUI class extends GameObject.
 class PlayerUI extends GameObject {
-  constructor(x, y, image) {
+  constructor(x, y) {
     super(x, y); // Call the constructor of the GameObject class.
 
     // Create a new UI component with initial text and add it to this object's components.
-    this.uiComponent = new UI('Lives: 3 Score: 0', x, y);
+    this.uiComponent = new UI('Lives: 1 Score: 0', x, y);
     this.addComponent(this.uiComponent);
   }
 

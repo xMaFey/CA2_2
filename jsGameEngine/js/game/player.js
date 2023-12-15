@@ -94,9 +94,13 @@ class Player extends GameObject {
     for (const enemy of enemies) {
       if (physics.isColliding(enemy.getComponent(Physics))) {
         if(this.power > 0){
+          this.isInvulnerable = true;
           this.power--;
-          this.emitKillParticles();
+          this.emitKillParticles(enemy);
           this.game.removeGameObject(enemy);
+          setTimeout(() => {
+            this.isInvulnerable = false;
+          }, 1000);
         }
         else{
           this.collidedWithEnemy();
@@ -192,7 +196,7 @@ class Player extends GameObject {
 
   collidedWithEnemy() {
     // Checks collision with an enemy and reduce player's life if not invulnerable
-    if (!this.isInvulnerable && this.power <= 0){
+    if (!this.isInvulnerable && this.power == 0){
       this.lives--;
       this.isInvulnerable = true;
       this.emitHitParticles();
@@ -240,7 +244,7 @@ class Player extends GameObject {
 
   emitCollectPowerParticles(){
     // Create a particle system at the player's position when a jumpboost is collected
-    const particleSystem = new ParticleSystem(this.x, this.y, 'green', 30, 1, 0.5);
+    const particleSystem = new ParticleSystem(this.x, this.y, 'white', 30, 1, 0.5);
     this.game.addGameObject(particleSystem);
   }
 
@@ -250,7 +254,7 @@ class Player extends GameObject {
   }
 
   emitKillParticles(){
-    const particleSystem = new ParticleSystem(Enemy.x, Enemy.y, 'green', 40, 1.5, 1);
+    const particleSystem = new ParticleSystem(this.x, this.y, 'limegreen', 40, 1.5, 1);
     this.game.addGameObject(particleSystem);
   }
 

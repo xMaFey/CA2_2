@@ -6,6 +6,8 @@ import PlayerUI from './playerUI.js';
 import Platform from './platform.js';
 import Collectible from './collectible.js';
 import { Images } from '../engine/resources.js';
+import Jumpboost from './jumpboost.js';
+import Power from './power.js';
 
 // Define a class Level that extends the Game class from the engine
 class Level extends Game {
@@ -57,6 +59,11 @@ class Level extends Game {
     this.addGameObject(new Collectible(60, this.canvas.height - 80, 30, 30));
     this.addGameObject(new Collectible(630, this.canvas.height - 440, 30, 30));
     this.addGameObject(new Collectible(610, this.canvas.height - 60, 30, 30));
+
+    this.addGameObject(new Jumpboost(620, this.canvas.height - 240, 20, 20));
+
+    this.addGameObject(new Power(880, this.canvas.height - 120, 20, 20));
+
   }
   
 }

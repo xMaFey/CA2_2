@@ -7,6 +7,8 @@ import { Images } from '../engine/resources.js';
 import Enemy from './enemy.js';
 import Platform from './platform.js';
 import Collectible from './collectible.js';
+import Jumpboost from './jumpboost.js';
+import Power from './power.js';
 import ParticleSystem from '../engine/particleSystem.js';
 
 // Defining a class Player that extends GameObject
@@ -27,6 +29,7 @@ class Player extends GameObject {
     this.jumpForce = 200;
     this.jumpTime = 0.2;
     this.jumpTimer = 0;
+    this.power = 0;
     this.isInvulnerable = false;
     this.isGamepadMovement = false;
     this.isGamepadJump = false;
@@ -67,12 +70,37 @@ class Player extends GameObject {
         this.game.removeGameObject(collectible);
       }
     }
+
+    // Handle collisions with jumpboosts
+    const jumpboosts = this.game.gameObjects.filter((obj) => obj instanceof Jumpboost);
+    for (const jumpboost of jumpboosts) {
+      if (physics.isColliding(jumpboost.getComponent(Physics))) {
+        this.collectBoost(jumpboost);
+        this.game.removeGameObject(jumpboost);
+      }
+    }
+
+    // Handle collisions with powers
+    const powers = this.game.gameObjects.filter((obj) => obj instanceof Power);
+    for (const power of powers) {
+      if (physics.isColliding(power.getComponent(Physics))) {
+        this.collectPower(power);
+        this.game.removeGameObject(power);
+      }
+    }
   
     // Handle collisions with enemies
     const enemies = this.game.gameObjects.filter((obj) => obj instanceof Enemy);
     for (const enemy of enemies) {
       if (physics.isColliding(enemy.getComponent(Physics))) {
-        this.collidedWithEnemy();
+        if(this.power > 0){
+          this.power--;
+          this.emitKillParticles();
+          this.game.removeGameObject(enemy);
+        }
+        else{
+          this.collidedWithEnemy();
+        }
       }
     }
   
@@ -164,15 +192,24 @@ class Player extends GameObject {
 
   collidedWithEnemy() {
     // Checks collision with an enemy and reduce player's life if not invulnerable
-    if (!this.isInvulnerable) {
+    if (!this.isInvulnerable && this.power <= 0){
       this.lives--;
       this.isInvulnerable = true;
-      this.emitHitParticels();
+      this.emitHitParticles();
       // Make player vulnerable again after 2 seconds
       setTimeout(() => {
         this.isInvulnerable = false;
       }, 2000);
+      this.resetPlayerState();
     }
+  }
+
+  collectBoost(jumpboost) {
+    this.jumpForce = 400;
+    setTimeout(() => {
+      this.jumpForce = 200;
+    }, 5000);
+    this.emitCollectBoostParticles(jumpboost);
   }
 
   collect(collectible) {
@@ -182,15 +219,39 @@ class Player extends GameObject {
     this.emitCollectParticles(collectible);
   }
 
+  collectPower(power) {
+    // Handle power pickup
+    this.power += power.value;
+    console.log(`Power: ${this.power}`);
+    this.emitCollectPowerParticles(power);
+  }
+
   emitCollectParticles() {
     // Create a particle system at the player's position when a collectible is collected
     const particleSystem = new ParticleSystem(this.x, this.y, 'yellow', 30, 1, 0.5);
     this.game.addGameObject(particleSystem);
   }
 
-  emitHitParticels(){
-        const particleSystem = new ParticleSystem(this.x, this.y, 'red', 40, 1.5, 1);
-        this.game.addGameObject(particleSystem);
+  emitCollectBoostParticles(){
+    // Create a particle system at the player's position when a jumpboost is collected
+    const particleSystem = new ParticleSystem(this.x, this.y, 'white', 30, 1, 0.5);
+    this.game.addGameObject(particleSystem);
+  }
+
+  emitCollectPowerParticles(){
+    // Create a particle system at the player's position when a jumpboost is collected
+    const particleSystem = new ParticleSystem(this.x, this.y, 'green', 30, 1, 0.5);
+    this.game.addGameObject(particleSystem);
+  }
+
+  emitHitParticles(){
+    const particleSystem = new ParticleSystem(this.x, this.y, 'red', 40, 1.5, 1);
+    this.game.addGameObject(particleSystem);
+  }
+
+  emitKillParticles(){
+    const particleSystem = new ParticleSystem(Enemy.x, Enemy.y, 'green', 40, 1.5, 1);
+    this.game.addGameObject(particleSystem);
   }
 
   resetPlayerState() {
@@ -209,6 +270,7 @@ class Player extends GameObject {
     // Reset the game state, which includes the player's state
     this.lives = 2;
     this.score = 0;
+    this.power = 0;
     this.resetPlayerState();
   }
 }

@@ -17,8 +17,16 @@ class PlayerUI extends GameObject {
     // Find the player object in the game's gameObjects array.
     const player = this.game.gameObjects.find((obj) => obj instanceof Player);
 
-    // Update the text of the UI component to reflect the player's current lives and score.
-    this.uiComponent.setText(`Lives: ${player.lives}                 Score: ${player.score}                 Power: ${player.power}`);
+    if(Player.lives <= 0){
+      this.uiComponent.setText(`GAME OVER`);
+    } else if(Player.score >= 3){
+      this.uiComponent.setText(`YOU WIN`);
+    } else{
+      // Update the text of the UI component to reflect the player's current lives and score.
+      this.uiComponent.setText(`Lives: ${player.lives}                 Score: ${player.score}                 Power: ${player.power}`);
+    }
+
+    super.update(deltaTime);
   }
 }
 

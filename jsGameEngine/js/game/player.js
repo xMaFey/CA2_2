@@ -129,13 +129,16 @@ class Player extends GameObject {
 
     // Check if player has no lives left
     if (this.lives <= 0) {
+      this.resetGame();
+      alert('Game Over');
       location.reload();
     }
 
     // Check if player has collected all collectibles
     if (this.score >= 3) {
-      console.log('You win!');
-      location.reload();
+        this.resetGame();
+        alert('You win!');
+        location.reload();
     }
 
     super.update(deltaTime);
@@ -273,7 +276,7 @@ class Player extends GameObject {
   resetGame() {
     // Reset the game state, which includes the player's state
     this.lives = 2;
-    this.score = 0;
+    this.score = 0;this.emitCollectParticles
     this.power = 0;
     this.resetPlayerState();
   }
